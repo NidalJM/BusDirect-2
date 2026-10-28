@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BusDirect — Safi ➔ Marrakech</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-black': '#000000',
+                        'brand-canvas': '#ffffff',
+                        'brand-soft': '#efefef',
+                        'brand-softer': '#f3f3f3',
+                        'brand-body': '#5e5e5e',
+                        'brand-border': '#e2e2e2'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="script.js"></script>
+</head>
+
+<body class="bg-brand-canvas text-brand-black antialiased font-sans min-h-screen">
+    <header
+        class="sticky top-0 z-50 bg-white border-b border-brand-border px-4 sm:py-6 py-3 flex flex-wrap justify-between items-center gap-2 sm:gap-4">
+        <div class="flex items-center gap-3">
+            <span class="text-lg sm:text-xl font-bold tracking-tight">BusDirect</span>
+
+        </div>
+        <div>
+            <span
+                class="flex bg-brand-soft px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-sm font-medium items-center justify-center">Safi
+                ➔ Marrakech</span>
+        </div>
+        <div class="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
+            <!-- <div id="button-cart">
+                <a href="cart.html" class="bg-brand-soft px-3 sm:px-4 py-1.5 rounded-full">
+                    <i class="fa-solid fa-ticket"></i>
+                </a>
+            </div> -->
+            <div id="stat-seats" class="bg-brand-soft px-3 sm:px-4 py-1.5 rounded-full text-sm font-medium">
+                Places libres: <span id="count-free" class="font-bold"></span> / 20
+            </div>
+            <div id="stat-revenue" class="bg-brand-black text-white px-3 sm:px-4 py-1.5 rounded-full text-sm font-medium">
+                Recette: <span id="count-revenue" class="font-bold">0</span> DH
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-3 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8">
+        <section class="lg:col-span-7 flex flex-col gap-6">
+
+            <div class="bg-white rounded-2xl border border-brand-border p4 sm:p-6 shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold p-3">Plan de la Cabine (20 Places)</h2>
+                    <div class="flex items-center gap-2 text-xs font-medium p-3">
+                        <span class="inline-flex items-center gap-1 bg-brand-soft px-2.5 py-1 rounded-full">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Libre
+                        </span>
+                        <span class="inline-flex items-center gap-1 bg-brand-black text-white px-2.5 py-1 rounded-full">
+                            <span class="w-2 h-2 rounded-full bg-white"></span> Occupé
+                        </span>
+                    </div>
+                </div>
+
+                <div class="bg-brand-soft rounded-xl p-4">
+                    <div
+                        class="text-center text-xs font-semibold text-brand-body uppercase tracking-wider mb-4 pb-2 border-b border-brand-border">
+                        Avant du Bus / Chauffeur
+                    </div>
+
+                    <div id="cabin-grid" class="grid grid-cols-[1fr_1fr_24px_1fr_1fr] gap-y-3 gap-x-2 max-w-md mx-auto">
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="bg-white rounded-2xl border border-brand-border p-6 shadow-sm">
+                <h3 class="text-md font-bold mb-3">Liste des Passagers</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-brand-soft text-brand-body text-xs uppercase">
+                            <tr>
+                                <th class="px-4 py-2.5">Passager</th>
+                                <th class="px-4 py-2.5">Siège</th>
+                                <th class="px-4 py-2.5">Tarif</th>
+                            </tr>
+                        </thead>
+                        <tbody id="passenger-table-body" class="divide-y divide-brand-border">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section class="lg:col-span-5">
+            <div class="bg-white rounded-2xl border border-brand-border p-6 shadow-sm sticky top-24">
+
+                <div class="flex bg-brand-soft p-1 rounded-full mb-6">
+                    <button id="tab-reserve" type="button"
+                        class="flex-1 py-2 text-sm font-medium rounded-full bg-brand-black text-white transition-all">
+                        Réserver
+                    </button>
+                    <button id="tab-edit" type="button"
+                        class="flex-1 py-2 text-sm font-medium rounded-full text-brand-body transition-all">
+                        Modifier
+                    </button>
+                    <button id="tab-cancel" type="button"
+                        class="flex-1 py-2 text-sm font-medium rounded-full text-brand-body transition-all">
+                        Annuler
+                    </button>
+                </div>
+
+                <!-- Reserver -->
+
+                <form id="form-reserve" class="flex flex-col gap-4">
+                    <h3 class="text-md font-bold">Réserver une place</h3>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-body mb-1">Nom du passager *</label>
+                        <input type="text" id="reserve-name" placeholder="Ex: Karim Bennani"
+                            class="w-full bg-brand-softer border border-brand-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-black">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-body mb-1">Choix du siège</label>
+                        <select id="reserve-seat"
+                            class="w-full bg-brand-softer border border-brand-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-black">
+                            <option value="">Premier siège libre (Automatique)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-brand-black text-white font-medium py-3 rounded-full hover:bg-neutral-800 transition-colors mt-2 text-sm">
+                        Valider la réservation
+                    </button>
+                    <p id="toast1" class="text-xs font-semibold"></p>
+                </form>
+
+
+                <!-- Modifier -->
+
+                <form id="form-edit" class="hidden flex-col gap-4">
+                    <h3 class="text-md font-bold">Modifier une réservation</h3>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-body mb-1">Passager existant *</label>
+                        <select id="edit-passenger" required
+                            class="w-full bg-brand-softer border border-brand-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-black">
+                            <option value="">Sélectionner un passager</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-body mb-1">Nouveau nom *</label>
+                        <input type="text" id="edit-name" required placeholder="Nouveau nom"
+                            class="w-full bg-brand-softer border border-brand-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-black">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-body mb-1">Changer de siège</label>
+                        <select id="edit-seat"
+                            class="w-full bg-brand-softer border border-brand-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-black">
+                            <option value="">Garder le siège actuel</option>
+                        </select>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-brand-black text-white font-medium py-3 rounded-full hover:bg-neutral-800 transition-colors mt-2 text-sm">
+                        Enregistrer les modifications
+                    </button>
+                    <p id="toast2" class="text-xs font-semibold"></p>
+                </form>
+
+
+
+                <!-- ANNULER -->
+
+
+                <form id="form-cancel" class="hidden flex-col gap-4">
+                    <h3 class="text-md font-bold">Annuler une réservation</h3>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-body mb-1">Réservation à annuler *</label>
+                        <select id="cancel-passenger" required
+                            class="w-full bg-brand-softer border border-brand-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-black">
+                            <option value="">Sélectionner une réservation</option>
+                        </select>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-red-600 text-white font-medium py-3 rounded-full hover:bg-red-700 transition-colors mt-2 text-sm">
+                        Libérer le siège
+                    </button>
+                    <p id="toast3" class="text-xs font-semibold"></p>
+                </form>
+    </main>
+</body>
+
+</html>
