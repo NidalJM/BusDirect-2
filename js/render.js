@@ -6,7 +6,6 @@ export function renderTrajets(trips) {
         const isFull = estComplet(trip);
         const free = placesLibres(trip);
 
-        
         return `
         <div class="bg-white rounded-2xl border border-brand-border p-5 shadow-sm flex flex-col justify-between gap-4">
     <div class="flex justify-between items-start">
