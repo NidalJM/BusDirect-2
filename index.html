@@ -51,6 +51,12 @@
                         <input type="search" id="site-search" name="q" placeholder="Search routes, cities ..."
                             class="border rounded-md py-1 pl-2.5" required>
                         <!-- <button type="submit" class="">Search</button> -->
+                         <label for="site-filter">Filtre with: </label>
+                         <select name="site-filter" id="site-filter" class="border rounded-md py-1 pl-0.5 pr-2">
+                            <option value="tous">Tous les trajets</option>
+                            <option value="disponible">Disponible</option>
+                            <option value="complet">Complet</option>
+                         </select>
                 </form>        
                         <div><button id="btn-prev" type="button"
                             class="px-3 py-1.5 rounded-lg bg-brand-soft text-brand-black hover:bg-brand-border transition-all text-sm font-medium">Prev</button>

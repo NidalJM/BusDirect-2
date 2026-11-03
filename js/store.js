@@ -2,7 +2,6 @@ export function sauvegarder(trips){
     localStorage.setItem('trips',JSON.stringify(trips));
 }
 
-
 export async function initialiser() {
     const savedData = localStorage.getItem('trips');
     if (savedData) {
