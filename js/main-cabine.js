@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ptoast3 = document.getElementById('toast3');
 
     //Stats
+    const cityStats = document.getElementById('city-stats');
     const countFree = document.getElementById('count-free');
     const countRevenue = document.getElementById('count-revenue');
 
@@ -52,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function updateStats() {
         if (countFree) { countFree.textContent = placesLibres(trip) }
         if (countRevenue) { countRevenue.textContent = recetteTrajet(trip) }
+        if (cityStats) {cityStats.textContent= `${trip.departure} ➔ ${trip.destination}`}
     }
     updateStats()
 
