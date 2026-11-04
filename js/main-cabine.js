@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                          <td class="px-4 py-2.5">Siège ${seatNum}</td>
                          <td class="px-4 py-2.5">80 DH </td>
         `;
-            passengerTableBody.prepend(tr)
+                passengerTableBody.prepend(tr)
             } else {
 
                 seatCard.className = "bg-brand-black text-white border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <span class="bg-white/20 text-[10px] font-semibold px-2 py-0.5 rounded-full truncate max-w-[70px]"></span>
         `;
             }
-            
+
             cabinGrid.appendChild(seatCard)
             if (i % 4 === 2) {
                 const aisleSpacer = document.createElement('div');
@@ -115,4 +115,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
     renderCabin()
+    updateStats();
+
+    for (let i = 1; i <= 20; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `Siège ${i}`;
+        reserveSeat.appendChild(option);
+    }
+
+    for (let i = 1; i <= 20; i++) {
+        const optionEdit = document.createElement('option');
+        optionEdit.value = i;
+        optionEdit.textContent = `Siège ${i}`;
+        editSeat.appendChild(optionEdit);
+    }
 })
+
+
+
