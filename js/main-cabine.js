@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (reservations) {
                 seatCard.className = "bg-brand-black text-white border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
+                seatCard.setAttribute('data-seat', seatNum);
                 seatCard.innerHTML = `
                     <i class="fa-solid fa-user text-lg"></i>
                     <span class="text-xs font-bold">Siège ${seatNum}</span>
@@ -158,6 +159,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         formCancel.classList.remove('hidden');
         tabCancel.className = "flex-1 py-2 text-sm font-medium rounded-full bg-brand-black text-white transition-all"
     })
+
+        editPassenger.addEventListener('change', () => {
+        const seatId = editPassenger.value;
+        if (!seatId) {
+            editName.value = '';
+            return;
+        }
+        const seatCard = document.querySelector(`[data-seat="${seatId}"]`);
+        if (seatCard) {
+            const nameSpan = seatCard.querySelector('span:nth-child(3)');
+            if (nameSpan) {
+                editName.value = nameSpan.textContent;
+            }
+        }
+    });
+
+
+
+
+
+
 });
 
 
