@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function updateStats() {
         if (countFree) { countFree.textContent = placesLibres(trip) }
         if (countRevenue) { countRevenue.textContent = recetteTrajet(trip) }
-        if (cityStats) {cityStats.textContent= `${trip.departure} ➔ ${trip.destination}`}
+        if (cityStats) { cityStats.textContent = `${trip.departure} ➔ ${trip.destination}` }
     }
     updateStats()
 
@@ -76,16 +76,36 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <span class="text-xs font-bold">Siège ${seatNum}</span>
                     <span class="bg-white/20 text-[10px] font-semibold px-2 py-0.5 rounded-full truncate max-w-[70px]">${reservations.name}</span>
                 `;
-            } else  {
+
+                const editOpt = document.createElement('option');
+                editOpt.value = seatNum;
+                editOpt.textContent = `${reservations.name} (Siege ${seatNum})`;
+                editPassenger.appendChild(editOpt);
+
+                const cancelOpt = document.createElement('option');
+                cancelOpt.value = seatNum;
+                cancelOpt.textContent = `${reservations.name} (Siege ${seatNum})`;
+                cancelPassenger.appendChild(cancelOpt);
+
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-passenger-seat', seatNum);
+                tr.innerHTML = `
+                         <td class="px-4 py-2.5 rounded-l-lg">${reservations.name}</td>
+                         <td class="px-4 py-2.5">Siège ${seatNum}</td>
+                         <td class="px-4 py-2.5">80 DH </td>
+        `;
+            passengerTableBody.prepend(tr)
+            } else {
 
                 seatCard.className = "bg-brand-black text-white border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
-            seatCard.setAttribute('data-seat', seatNum);
-            seatCard.innerHTML = `
+                seatCard.setAttribute('data-seat', seatNum);
+                seatCard.innerHTML = `
         <i class="fa-solid fa-user text-lg"></i>
          <span class="text-xs font-bold">Siège ${seatNum}</span>
         <span class="bg-white/20 text-[10px] font-semibold px-2 py-0.5 rounded-full truncate max-w-[70px]"></span>
         `;
             }
+            
             cabinGrid.appendChild(seatCard)
             if (i % 4 === 2) {
                 const aisleSpacer = document.createElement('div');
