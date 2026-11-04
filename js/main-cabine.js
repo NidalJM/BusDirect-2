@@ -130,7 +130,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         optionEdit.textContent = `Siège ${i}`;
         editSeat.appendChild(optionEdit);
     }
-})
 
+    function hideForms() {
+        formReserver.classList.add('hidden');
+        formEdit.classList.add('hidden');
+        formCancel.classList.add('hidden');
+
+        [tabReserver, tabEdit, tabCancel].forEach(tab => {
+            tab.className = "flex-1 py-2 text-sm font-medium rounded-full text-brand-body transition-all"
+        });
+    }
+
+    tabReserver.addEventListener('click', () => {
+        hideForms();
+        formReserver.classList.remove('hidden');
+        tabReserver.className = "flex-1 py-2 text-sm font-medium rounded-full bg-brand-black text-white transition-all"
+    })
+
+    tabEdit.addEventListener('click', () => {
+        hideForms();
+        formEdit.classList.remove('hidden');
+        tabEdit.className = "flex-1 py-2 text-sm font-medium rounded-full bg-brand-black text-white transition-all"
+    })
+
+    tabCancel.addEventListener('click', () => {
+        hideForms();
+        formCancel.classList.remove('hidden');
+        tabCancel.className = "flex-1 py-2 text-sm font-medium rounded-full bg-brand-black text-white transition-all"
+    })
+});
 
 
