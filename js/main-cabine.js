@@ -1,4 +1,4 @@
-import { initialiser } from "./store.js";
+import { initialiser, sauvegarder } from "./store.js";
 import { placesLibres, estVIP, prixSiege, recetteTrajet } from "./reservations.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -61,7 +61,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         // if (!renderCabin) return;
 
         cabinGrid.innerHTML = ``;
-
+        passengerTableBody.innerHTML = ``;
+        editPassenger.innerHTML = `<option value="">Sélectionner un passager</option>`;
+        cancelPassenger.innerHTML = `<option value="">Sélectionner une réservation</option>`
 
 
         for (let i = 1; i <= 20; i++) {
@@ -72,6 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (reservations) {
                 seatCard.className = "bg-brand-black text-white border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
                 seatCard.setAttribute('data-seat', seatNum);
+                seatCard.setAttribute('data-occupied', 'true');
                 seatCard.innerHTML = `
                     <i class="fa-solid fa-user text-lg"></i>
                     <span class="text-xs font-bold">Siège ${seatNum}</span>
@@ -98,10 +101,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 passengerTableBody.prepend(tr)
             } else {
 
-                seatCard.className = "bg-brand-black text-white border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
+                seatCard.className = "bg-white text-black border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
                 seatCard.setAttribute('data-seat', seatNum);
+                seatCard.setAttribute('data-occupied', 'false');
                 seatCard.innerHTML = `
-        <i class="fa-solid fa-user text-lg"></i>
+        <i class="fa-solid fa-chair text-lg"></i>
          <span class="text-xs font-bold">Siège ${seatNum}</span>
         <span class="bg-white/20 text-[10px] font-semibold px-2 py-0.5 rounded-full truncate max-w-[70px]"></span>
         `;
@@ -160,7 +164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         tabCancel.className = "flex-1 py-2 text-sm font-medium rounded-full bg-brand-black text-white transition-all"
     })
 
-        editPassenger.addEventListener('change', () => {
+    editPassenger.addEventListener('change', () => {
         const seatId = editPassenger.value;
         if (!seatId) {
             editName.value = '';
@@ -176,6 +180,82 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
 
+    formReserver.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const passengerName = reserveName.value.trim();
+        let selectedSeatId = reserveSeat.value;
+        let seatCard = document.querySelector(`[data-seat="${selectedSeatId}"]`);
+
+        if (!passengerName) {
+            ptoast.textContent = "Veuiller entrer le nom du passager.";
+            setTimeout(() => {
+                ptoast.textContent = "";
+            }, 3000);
+            // alert("Veuillez entrer le nom du passager.");
+            return;
+        }
+
+        if (selectedSeatId === "") {
+            seatCard = document.querySelector('[data-occupied="false"]');
+            selectedSeatId = seatCard.getAttribute('data-seat');
+        }
+
+        if (seatCard.getAttribute('data-occupied') === "true") {
+            ptoast.textContent = "Seat Already Reserved"
+            setTimeout(() => {
+                ptoast.textContent = "";
+            }, 3000);
+            // alert("Seat Already Reserved");
+            return;
+        }
+
+        if (seatCard) {
+            seatCard.className = "bg-brand-black text-white rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all shadow-sm";
+            seatCard.setAttribute('data-occupied', 'true');
+            seatCard.innerHTML = `
+                <i class="fa-solid fa-user text-lg"></i>
+                <span class="text-xs font-bold">Siège ${selectedSeatId}</span>
+                <span class="bg-white/20 text-[10px] font-semibold px-2 py-0.5 rounded-full truncate max-w-[70px]">${passengerName}</span>
+            `;
+            // localStorage.setItem(`seat_${selectedSeatId}`, passengerName)
+            const newReservation = {
+                seat: selectedSeatId,
+                name: passengerName,
+                phone: ""
+            }
+            trip.reservations = [...trip.reservations, newReservation];
+            sauvegarder(alltrips);
+            renderCabin();
+
+            const option = document.createElement('option');
+            option.value = selectedSeatId;
+            option.textContent = `${passengerName} (Siège ${selectedSeatId})`;
+            editPassenger.appendChild(option);
+
+            const tr = document.createElement('tr');
+            tr.setAttribute('data-passenger-seat', selectedSeatId);
+            tr.innerHTML = `
+                <td class="px-4 py-2.5 rounded-l-lg">${passengerName}</td>
+                <td class="px-4 py-2.5">Siège ${selectedSeatId}</td>
+                <td class="px-4 py-2.5">80 DH </td>
+            `;
+            passengerTableBody.prepend(tr);
+
+            const cancelOption = document.createElement('option');
+            cancelOption.value = selectedSeatId;
+            cancelOption.textContent = `${passengerName} (Siege) ${selectedSeatId}`
+            cancelPassenger.appendChild(cancelOption);
+
+        }
+        ptoast.textContent = "Seat Reserved Successfully"
+        setTimeout(() => {
+            ptoast.textContent = "";
+        }, 3000);
+        formReserver.reset();
+        updateStats();
+
+    });
 
 
 
