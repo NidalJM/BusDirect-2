@@ -228,24 +228,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             sauvegarder(alltrips);
             renderCabin();
 
-            const option = document.createElement('option');
-            option.value = selectedSeatId;
-            option.textContent = `${passengerName} (Siège ${selectedSeatId})`;
-            editPassenger.appendChild(option);
+            // const option = document.createElement('option');
+            // option.value = selectedSeatId;
+            // option.textContent = `${passengerName} (Siège ${selectedSeatId})`;
+            // editPassenger.appendChild(option);
 
-            const tr = document.createElement('tr');
-            tr.setAttribute('data-passenger-seat', selectedSeatId);
-            tr.innerHTML = `
-                <td class="px-4 py-2.5 rounded-l-lg">${passengerName}</td>
-                <td class="px-4 py-2.5">Siège ${selectedSeatId}</td>
-                <td class="px-4 py-2.5">80 DH </td>
-            `;
-            passengerTableBody.prepend(tr);
+            // const tr = document.createElement('tr');
+            // tr.setAttribute('data-passenger-seat', selectedSeatId);
+            // tr.innerHTML = `
+            //     <td class="px-4 py-2.5 rounded-l-lg">${passengerName}</td>
+            //     <td class="px-4 py-2.5">Siège ${selectedSeatId}</td>
+            //     <td class="px-4 py-2.5">80 DH </td>
+            // `;
+            // passengerTableBody.prepend(tr);
 
-            const cancelOption = document.createElement('option');
-            cancelOption.value = selectedSeatId;
-            cancelOption.textContent = `${passengerName} (Siege) ${selectedSeatId}`
-            cancelPassenger.appendChild(cancelOption);
+            // const cancelOption = document.createElement('option');
+            // cancelOption.value = selectedSeatId;
+            // cancelOption.textContent = `${passengerName} (Siege) ${selectedSeatId}`
+            // cancelPassenger.appendChild(cancelOption);
 
         }
         ptoast.textContent = "Seat Reserved Successfully"
@@ -257,6 +257,55 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     });
 
+
+
+    formEdit.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const oldSeatId = editPassenger.value;
+        const newName = editName.value.trim();
+        const newSeatId = editSeat.value;
+        let targetSeatId = oldSeatId;
+
+        if (newSeatId !== "" && newSeatId !== oldSeatId) {
+            const newSeatCard = document.querySelector(`[data-seat="${newSeatId}"]`);
+
+            if (newSeatCard.getAttribute('data-occupied') === "true") {
+                ptoast2.textContent = "Seat Already occupied"
+                setTimeout(() => {
+                    ptoast2.textContent = "";
+                }, 3000);
+                formReserver.reset();
+                return;
+            }
+
+            // const oldSeatCard = document.querySelector(`[data-seat="${oldSeatId}"]`);
+            // oldSeatCard.className = "bg-white border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
+            // oldSeatCard.setAttribute('data-occupied', 'false');
+            // oldSeatCard.innerHTML = `
+            //     <i class="fa-solid fa-chair text-brand-body text-lg"></i>
+            //     <span class="text-xs font-bold">Siège ${oldSeatId}</span>
+            //     <span class="bg-brand-soft text-[10px] font-semibold text-brand-body px-2 py-0.5 rounded-full">Libre</span>
+            // `;
+
+            targetSeatId = newSeatId;
+
+        }
+        const reservation = trip.reservations.find(r => Number(r.seat) === Number(oldSeatId));
+        if (reservation) {
+            reservation.name = newName;
+            reservation.seat = Number(targetSeatId);
+        }
+        sauvegarder(alltrips)
+        renderCabin()
+
+        ptoast2.textContent = "Seat Edited Successfully"
+        setTimeout(() => {
+            ptoast2.textContent = "";
+        }, 3000);
+
+        formEdit.reset();
+    });
 
 
 
