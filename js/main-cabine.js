@@ -308,6 +308,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
 
+    formCancel.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const deleteSeatId = Number(cancelPassenger.value);
+
+        // if (!deleteSeatId){
+
+        // }
+
+        trip.reservations = trip.reservations.filter(r => Number(r.seat) !== deleteSeatId)
+
+        sauvegarder(alltrips)
+        renderCabin()
+        ptoast3.textContent = "Seat Deleted Successfully"
+        setTimeout(() => {
+            ptoast3.textContent = "";
+        }, 3000);
+        formCancel.reset();
+    });
+
 
 });
 
