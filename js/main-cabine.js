@@ -68,11 +68,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         for (let i = 1; i <= 20; i++) {
             const seatNum = i;
+            const isVip = estVIP(seatNum)
             const reservations = trip.reservations.find(r => Number(r.seat) === seatNum)
             const seatCard = document.createElement('div');
 
             if (reservations) {
-                seatCard.className = "bg-brand-black text-white border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
+
+                seatCard.className = isVip ? "bg-purple-300 text-black border-2 border-pink-900 rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer shadow-sm"
+                    : "bg-brand-black text-white border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
+                // "bg-brand-black text-white border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
                 seatCard.setAttribute('data-seat', seatNum);
                 seatCard.setAttribute('data-occupied', 'true');
                 seatCard.innerHTML = `
@@ -100,8 +104,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
                 passengerTableBody.prepend(tr)
             } else {
-
-                seatCard.className = "bg-white text-black border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
+                seatCard.className = isVip
+                    ? "bg-purple-300 text-black border-2 border-pink-900 rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-amber-600 transition-all shadow-sm"
+                    : "bg-white text-black border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
+                // seatCard.className = "bg-white text-black border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
                 seatCard.setAttribute('data-seat', seatNum);
                 seatCard.setAttribute('data-occupied', 'false');
                 seatCard.innerHTML = `
