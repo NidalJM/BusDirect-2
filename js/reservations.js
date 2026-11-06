@@ -20,3 +20,5 @@ export function recetteTrajet(trip)    {
         return total + prixSiege(trip.price, res.seat);
     }, 0);
 }
+
+

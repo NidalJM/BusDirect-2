@@ -96,4 +96,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     // console.log(alltrips);
     searchInput.addEventListener('input', handleTrips);
     filterInput.addEventListener('change', handleTrips);
+
+    const listeTrajets = document.getElementById('liste-trajets');
+    if (listeTrajets)   {
+        listeTrajets.addEventListener('click', (e) => {
+            const card = e.target.closest('[data-id]');
+
+            if (card)   {
+                const tripId = card.getAttribute('data-id');
+                window.location.href = `cabine.html?id=${tripId}`;
+            }
+        })
+    }
 });
