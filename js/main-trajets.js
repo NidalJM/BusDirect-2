@@ -63,10 +63,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnPrev = document.getElementById('btn-prev');
     const btnNext = document.getElementById('btn-next');
 
+
     btnNext.addEventListener('click', () => {
         if (currentPage === totalpages) {
             btnNext.disabled = true;
 
+        }
+        if (currentPage !== totalpages) {
+        currentPage += 1;
+        btnPrev.disabled = false;
+        afficher();
+        }
+
+        
+    })
+
+    if (currentPage === 1) {
+        btnPrev.disabled = true;
+    }
+
+    btnPrev.addEventListener('click', () => {
+
+        // return
+        if (currentPage !== 1) {
+            currentPage -= 1;
+            btnNext.disabled = false;
+            afficher();
         }
         if (currentPage !== totalpages) {
             currentPage += 1;
