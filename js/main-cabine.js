@@ -79,15 +79,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (reservations) {
 
-                seatCard.className = isVip ? "bg-purple-300 text-black border-2 border-pink-900 rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer shadow-sm"
-                    : "bg-brand-black text-white border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
+                seatCard.className = isVip ? "min-w-0 bg-purple-300 text-black border-2 border-pink-900 rounded-xl p-1 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer shadow-sm"
+                    : "min-w-0 bg-brand-black text-white border border-brand-border rounded-xl p-1 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
                 // "bg-brand-black text-white border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
                 seatCard.setAttribute('data-seat', seatNum);
                 seatCard.setAttribute('data-occupied', 'true');
                 seatCard.innerHTML = `
-                    <i class="fa-solid fa-user text-lg"></i>
-                    <span class="text-xs font-bold">Siège ${seatNum}</span>
-                    <span class="bg-white/20 text-[10px] font-semibold px-2 py-0.5 rounded-full truncate max-w-[70px]">${reservations.name}</span>
+                    <i class="fa-solid fa-user text-lg text-sm sm:text-lg"></i>
+                    <span class="text-[10px] sm:text-xs font-bold">Siège ${seatNum}</span>
+                    <span class="bg-white/20 text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded-full truncate max-w-[70px]">${reservations.name}</span>
                 `;
 
                 const editOpt = document.createElement('option');
@@ -110,15 +110,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 passengerTableBody.prepend(tr)
             } else {
                 seatCard.className = isVip
-                    ? "bg-purple-300 text-black border-2 border-pink-900 rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-amber-600 transition-all shadow-sm"
-                    : "bg-white text-black border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
+                    ? "min-w-0 bg-purple-300 text-black border-2 border-pink-900 rounded-xl p-1 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-amber-600 transition-all shadow-sm"
+                    : "min-w-0 bg-white text-black border border-brand-border rounded-xl p-1 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
                 // seatCard.className = "bg-white text-black border border-brand-border rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-brand-black transition-all shadow-sm";
                 seatCard.setAttribute('data-seat', seatNum);
                 seatCard.setAttribute('data-occupied', 'false');
                 seatCard.innerHTML = `
-        <i class="fa-solid fa-chair text-lg"></i>
-         <span class="text-xs font-bold">Siège ${seatNum}</span>
-        <span class="bg-white/20 text-[10px] font-semibold px-2 py-0.5 rounded-full truncate max-w-[70px]"></span>
+        <i class="fa-solid fa-chair text-lg sm:text-lg"></i>
+         <span class="text-[10px] sm:text-xs font-bold">Siège ${seatNum}</span>
+        <span class="bg-white/20 text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 rounded-full truncate max-w-[70px]"></span>
         `;
             }
 
