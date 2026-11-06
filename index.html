@@ -36,24 +36,19 @@
                 <span class="text-lg sm:text-xl font-bold tracking-tight">BusDirect</span>
             </a>
         </div>
-        <div>
-            <span
-                class="flex bg-brand-soft px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-sm font-medium items-center justify-center">Temp
-            </span>
-        </div>
     </header>
 
     <main class="max-w-7xl mx-auto p-3 sm:p-6 grid gap-4 sm:gap-8">
         <section class="lg:col-span-7 flex flex-col gap-6">
-            <div class="flex justify-between bg-white rounded-2xl border border-brand-border p-4 sm:p-6 shadow-sm">
+            <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 bg-white rounded-2xl border border-brand-border p-4 sm:p-6 shadow-sm">
                 <form action="/search" method="get">
 
                     <label for="site-search">Search:</label>
                     <input type="search" id="site-search" name="q" placeholder="Search routes, cities ..."
-                        class="border rounded-md py-1 pl-2.5" required>
+                        class="border rounded-md py-1 pl-2.5 sm: mr-8" required>
                     <!-- <button type="submit" class="">Search</button> -->
                     <label for="site-filter">Filtre with: </label>
-                    <select name="site-filter" id="site-filter" class="border rounded-md py-1 pl-0.5 pr-2">
+                    <select name="site-filter" id="site-filter" class="border rounded-md py-1 pl-0.5 pr-2 sm: mt-4">
                         <option value="tous">Tous les trajets</option>
                         <option value="disponible">Disponible</option>
                         <option value="complet">Complet</option>
