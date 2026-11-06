@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     //Inputs
 
     const reserveName = document.getElementById('reserve-name');
+    const reservePhone = document.getElementById('reserve-phone')
     const reserveSeat = document.getElementById('reserve-seat');
 
     const editPassenger = document.getElementById('edit-passenger');
@@ -42,6 +43,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const cityStats = document.getElementById('city-stats');
     const countFree = document.getElementById('count-free');
     const countRevenue = document.getElementById('count-revenue');
+
+    //List
+    const listAttente = document.getElementById('attente-table-body')
 
     if (!trip) {
         bodyMain.innerHTML = `
@@ -62,6 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         cabinGrid.innerHTML = ``;
         passengerTableBody.innerHTML = ``;
+        if (listAttente) listAttente.innerHTML = ``;
         editPassenger.innerHTML = `<option value="">Sélectionner un passager</option>`;
         cancelPassenger.innerHTML = `<option value="">Sélectionner une réservation</option>`
 
@@ -100,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tr.innerHTML = `
                          <td class="px-4 py-2.5 rounded-l-lg">${reservations.name}</td>
                          <td class="px-4 py-2.5">Siège ${seatNum}</td>
-                         <td class="px-4 py-2.5">80 DH </td>
+                         <td class="px-4 py-2.5">${prixSiege(trip.price, seatNum)} DH </td>
         `;
                 passengerTableBody.prepend(tr)
             } else {
@@ -124,6 +129,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
         }
+        if (listAttente && trip.waitingList) {
+            trip.waitingList.forEach(e => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="px-4 py-2.5">${e.name}</td>`
+                listAttente.appendChild(tr);
+            })
+
+        }
+        updateStats();
     }
     renderCabin()
     updateStats();
@@ -190,6 +204,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.preventDefault();
 
         const passengerName = reserveName.value.trim();
+        const passengerPhone = reservePhone.value.trim();
+        const phoneRegex = /^0[67]\d{8}$/;
         let selectedSeatId = reserveSeat.value;
         let seatCard = document.querySelector(`[data-seat="${selectedSeatId}"]`);
 
@@ -200,6 +216,40 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 3000);
             // alert("Veuillez entrer le nom du passager.");
             return;
+        }
+
+        if (!passengerPhone) {
+            ptoast.textContent = "Veuiller entrer le Numer to telephone.";
+            setTimeout(() => {
+                ptoast.textContent = "";
+            }, 3000);
+            // alert("Veuillez entrer le nom du passager.");
+            return;
+        }
+
+        if (!phoneRegex.test(passengerPhone)) {
+            ptoast.textContent = "Le numero doit commencer par 06 ou 07 et contenir 10 chiffres.";
+            setTimeout(() => {
+                ptoast.textContent = "";
+            }, 3000);
+            // alert("Veuillez entrer le nom du passager.");
+            return;
+        }
+
+        if (placesLibres(trip) === 0) {
+            if (!trip.waitingList) trip.waitingList = [];
+
+            trip.waitingList.push({ name: passengerName, phone: passengerPhone });
+            sauvegarder(alltrips);
+            renderCabin();
+
+            ptoast.textContent = "Bus Complet. Passager ajoute a la liste d'attente"
+            setTimeout(() => {
+                ptoast.textContent = "";
+            }, 3000);
+            formReserver.reset();
+            return;
+
         }
 
         if (selectedSeatId === "") {
@@ -216,6 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+
         if (seatCard) {
             seatCard.className = "bg-brand-black text-white rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all shadow-sm";
             seatCard.setAttribute('data-occupied', 'true');
@@ -228,7 +279,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const newReservation = {
                 seat: selectedSeatId,
                 name: passengerName,
-                phone: ""
+                phone: passengerPhone
             }
             trip.reservations = [...trip.reservations, newReservation];
             sauvegarder(alltrips);
@@ -281,7 +332,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 setTimeout(() => {
                     ptoast2.textContent = "";
                 }, 3000);
-                formReserver.reset();
+                formEdit.reset();
                 return;
             }
 
@@ -324,6 +375,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         // }
 
         trip.reservations = trip.reservations.filter(r => Number(r.seat) !== deleteSeatId)
+
+        if (trip.waitingList && trip.waitingList.length > 0)    {
+            const nextPassenger = trip.waitingList.shift();
+
+            trip.reservations.push({
+                seat: deleteSeatId,
+                name: nextPassenger.name,
+                phone: nextPassenger.phone || ""
+            });
+        }
 
         sauvegarder(alltrips)
         renderCabin()
