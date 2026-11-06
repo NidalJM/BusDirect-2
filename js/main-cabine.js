@@ -43,6 +43,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const countFree = document.getElementById('count-free');
     const countRevenue = document.getElementById('count-revenue');
 
+    //List
+    const listAttente = document.getElementById('attente-table-body')
+
     if (!trip) {
         bodyMain.innerHTML = `
         <div class="flex h-screen justify-center items-center"><p class="p-4 border-2 rounded-2xl font-bold">No route founded</p></div>
@@ -62,6 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         cabinGrid.innerHTML = ``;
         passengerTableBody.innerHTML = ``;
+        if (listAttente) listAttente.innerHTML = ``;
         editPassenger.innerHTML = `<option value="">Sélectionner un passager</option>`;
         cancelPassenger.innerHTML = `<option value="">Sélectionner une réservation</option>`
 
@@ -100,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tr.innerHTML = `
                          <td class="px-4 py-2.5 rounded-l-lg">${reservations.name}</td>
                          <td class="px-4 py-2.5">Siège ${seatNum}</td>
-                         <td class="px-4 py-2.5">80 DH </td>
+                         <td class="px-4 py-2.5">${prixSiege(trip.price, seatNum)} DH </td>
         `;
                 passengerTableBody.prepend(tr)
             } else {
@@ -124,6 +128,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
         }
+        if (listAttente && trip.waitingList) {
+            trip.waitingList.forEach(e => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="px-4 py-2.5">${e.name}</td>`
+                listAttente.appendChild(tr);
+            })
+
+        }
+
     }
     renderCabin()
     updateStats();
@@ -202,6 +215,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        if (placesLibres(trip) === 0) {
+            if (!trip.waitingList) trip.waitingList = [];
+
+            trip.waitingList.push({ name: passengerName, phone: "" });
+            sauvegarder(alltrips);
+            renderCabin();
+
+            ptoast.textContent = "Bus Complet. Passager ajoute a la liste d'attente"
+            setTimeout(() => {
+                ptoast.textContent = "";
+            }, 3000);
+            formReserver.reset();
+            return;
+
+        }
+
         if (selectedSeatId === "") {
             seatCard = document.querySelector('[data-occupied="false"]');
             selectedSeatId = seatCard.getAttribute('data-seat');
@@ -215,6 +244,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // alert("Seat Already Reserved");
             return;
         }
+
 
         if (seatCard) {
             seatCard.className = "bg-brand-black text-white rounded-xl p-1.5 sm:p-3 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all shadow-sm";
@@ -281,7 +311,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 setTimeout(() => {
                     ptoast2.textContent = "";
                 }, 3000);
-                formReserver.reset();
+                formEdit.reset();
                 return;
             }
 
