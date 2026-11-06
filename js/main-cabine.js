@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     //Inputs
 
     const reserveName = document.getElementById('reserve-name');
+    const reservePhone = document.getElementById('reserve-phone')
     const reserveSeat = document.getElementById('reserve-seat');
 
     const editPassenger = document.getElementById('edit-passenger');
@@ -203,6 +204,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.preventDefault();
 
         const passengerName = reserveName.value.trim();
+        const passengerPhone = reservePhone.value.trim();
+        const phoneRegex = /^0[67]\d{8}/;
         let selectedSeatId = reserveSeat.value;
         let seatCard = document.querySelector(`[data-seat="${selectedSeatId}"]`);
 
@@ -215,10 +218,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        if (!passengerPhone) {
+            ptoast.textContent = "Veuiller entrer le Numer to telephone.";
+            setTimeout(() => {
+                ptoast.textContent = "";
+            }, 3000);
+            // alert("Veuillez entrer le nom du passager.");
+            return;
+        }
+
+        if (!phoneRegex.test(passengerPhone)) {
+            ptoast.textContent = "Le numero doit commencer par 06 ou 07 et contenir 10 chiffres.";
+            setTimeout(() => {
+                ptoast.textContent = "";
+            }, 3000);
+            // alert("Veuillez entrer le nom du passager.");
+            return;
+        }
+
         if (placesLibres(trip) === 0) {
             if (!trip.waitingList) trip.waitingList = [];
 
-            trip.waitingList.push({ name: passengerName, phone: "" });
+            trip.waitingList.push({ name: passengerName, phone: passengerPhone });
             sauvegarder(alltrips);
             renderCabin();
 
