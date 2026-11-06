@@ -22,7 +22,7 @@ export function renderTrajets(trips) {
         <div>
             <span class="text-lg font-bold">${trip.price} DH</span>
             <p class="text-xs text-brand-body mt-0.5">${free} / ${trip.capacity} places libres</p>
-            <p class="text-xs text-brand-body">Attente :</p>
+            <p class="text-xs text-brand-body">List d'Attente : ${trip.waitingList.length}</p>
         </div>
     </div>
 </div>
