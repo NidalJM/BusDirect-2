@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             })
 
         }
-
+        updateStats();
     }
     renderCabin()
     updateStats();
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const passengerName = reserveName.value.trim();
         const passengerPhone = reservePhone.value.trim();
-        const phoneRegex = /^0[67]\d{8}/;
+        const phoneRegex = /^0[67]\d{8}$/;
         let selectedSeatId = reserveSeat.value;
         let seatCard = document.querySelector(`[data-seat="${selectedSeatId}"]`);
 
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const newReservation = {
                 seat: selectedSeatId,
                 name: passengerName,
-                phone: ""
+                phone: passengerPhone
             }
             trip.reservations = [...trip.reservations, newReservation];
             sauvegarder(alltrips);
@@ -375,6 +375,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         // }
 
         trip.reservations = trip.reservations.filter(r => Number(r.seat) !== deleteSeatId)
+
+        if (trip.waitingList && trip.waitingList.length > 0)    {
+            const nextPassenger = trip.waitingList.shift();
+
+            trip.reservations.push({
+                seat: deleteSeatId,
+                name: nextPassenger.name,
+                phone: nextPassenger.phone || ""
+            });
+        }
 
         sauvegarder(alltrips)
         renderCabin()
